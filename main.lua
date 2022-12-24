@@ -17,6 +17,15 @@ function love.load()
     imgInimmigo = love.graphics.newImage("imagens/inimigo.png")
     inimigos= {}
 
+    fundo = love.graphics.newImage("imagens/fundo.png")
+    fundoSec = love.graphics.newImage("imagens/fundo.png")
+    planoFundoLaEle = {
+        x = 0,
+        y = 0,
+        y2 = 0 - fundo:getHeight(),
+        vel = 30
+    }
+
     estaVivo = true
     pontuacao = 0
 
@@ -34,6 +43,7 @@ function love.update(dt)
     atirar(dt)
     inimigo(dt)
     colisoes()
+    rolagem(dt)
 
     if not estaVivo and love.keyboard.isDown('r') then
     tiros = {}
@@ -142,8 +152,24 @@ function saberColisao(x1, y1, w1, h1, x2,y2,w2,h2)
     return x1 < x2 + w2 and x2 < x1 + w1 and y1 < y2 + h2 and y2 < y1 + h1
 end
 
+function rolagem(dt)
+    planoFundoLaEle.y = planoFundoLaEle.y + planoFundoLaEle.vel * dt
+    planoFundoLaEle.y2 = planoFundoLaEle.y2 + planoFundoLaEle.vel * dt
+
+    if planoFundoLaEle.y > alturaTela then
+        planoFundoLaEle.y = planoFundoLaEle.y2 - fundoSec:getHeight()
+    end
+    if planoFundoLaEle.y2 > alturaTela then
+        planoFundoLaEle.y2 = planoFundoLaEle.y - fundo:getHeight()
+    end
+
+
+end
+
+
 function love.draw()
-  
+  love.graphics.draw(fundo, planoFundoLaEle.x, planoFundoLaEle.y)
+  love.graphics.draw(fundoSec, planoFundoLaEle.x, planoFundoLaEle.y2)
     
     for i, tiro in ipairs(tiros) do
         love.graphics.draw(tiro.img, tiro.x, tiro.y, 0, 1, 1, imgTiro:getWidth()/2, imgTiro:getHeight()/2)
