@@ -3,13 +3,19 @@ alturaTela = love.graphics.getHeight()
 
 function love.load()
     imgTank = love.graphics.newImage( "imagens/tank.png" )
+
     love.mouse.setVisible( false )
+    
     atira = true
     delayT = 0.1
     timeTiro = delayT
     tiros = {}
     imgTiro = love.graphics.newImage("imagens/bala.png")
     
+    delayInimigo = 0.4
+    tempoCriaInimigo = delayInimigo
+    imgInimmigo = love.graphics.newImage("imagens/inimigo.png")
+    inimigos= {}
 
     tank = {
         posX = larguraTela / 2,
@@ -21,6 +27,7 @@ function love.load()
 function love.update(dt)
     move(dt)
     atirar(dt)
+    inimigo(dt)
 end
 
 function atirar(dt)
@@ -71,10 +78,32 @@ function move(dt)
 
 
 end
+
+function inimigo(dt)
+    tempoCriaInimigo = tempoCriaInimigo - (1 * dt)
+    if tempoCriaInimigo < 0 then
+        tempoCriaInimigo = delayInimigo
+        numAleatorio = math.random(10, love.graphics.getWidth() - ((imgInimmigo:getWidth() / 2 ) + 10))
+        novoInimigo = { x = numAleatorio, y = - imgInimmigo:getWidth(), img = imgInimmigo}
+        table.insert(inimigos, novoInimigo)
+    end
+
+    for i, inimigo in ipairs(inimigos) do 
+        inimigo.y = inimigo.y + (200 * dt)
+        if inimigo.y > 850 then
+            table.remove(inimigos, i)
+        end
+    end
+end
+
 function love.draw()
     love.graphics.draw(imgTank, tank.posX, tank.posY, 0, 1, 1, imgTank:getWidth()/2, imgTank:getHeight()/2)
     
     for i, tiro in ipairs(tiros) do
         love.graphics.draw(tiro.img, tiro.x, tiro.y, 0, 1, 1, imgTiro:getWidth()/2, imgTiro:getHeight()/2)
+    end
+
+    for i, inimigo in ipairs(inimigos) do 
+        love.graphics.draw(inimigo.img, inimigo.x, inimigo.y)
     end
 end
