@@ -25,11 +25,8 @@ function love.load()
         y2 = 0 - fundo:getHeight(),
         vel = 30
     }
-
     estaVivo = true
     pontuacao = 0
-
-
     tank = {
         posX = larguraTela / 2,
         posY = alturaTela / 2,
@@ -178,6 +175,9 @@ function love.draw()
     for i, inimigo in ipairs(inimigos) do 
         love.graphics.draw(inimigo.img, inimigo.x, inimigo.y)
     end
+
+ 
+    love.graphics.print("Pontuação: ".. pontuacao, 10, 10)
 
     if estaVivo then
         love.graphics.draw(imgTank, tank.posX, tank.posY, 0, 1, 1, imgTank:getWidth()/2, imgTank:getHeight()/2)
